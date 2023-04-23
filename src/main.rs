@@ -2,12 +2,14 @@ mod types;
 mod clip;
 mod color;
 mod default;
+mod process;
 
 use std::{process::exit, fmt, io::stdin, io::Read, result::Result};
 use structopt::StructOpt;
 use types::{Opt, CaseStateMachine};
 use color::get_hex;
 use clip::clip;
+use process::process;
 
 /// determine what mode to use
 fn get_mode(opt: &Opt) -> types::Mode {
@@ -91,7 +93,7 @@ fn main() {
         // Get the input as a string, all at once
         let instring = match mode {
             types::Mode::FromFile => {
-                let path = opt.file.unwrap();
+                let path = opt.file.clone().unwrap();
                 if path.try_exists().unwrap_or(false) {
                     std::fs::read_to_string(path)
                 } else {
@@ -108,5 +110,5 @@ fn main() {
         outstring.push_str(&do_sponge(&instring, &mut state));
     }
     print!("{}", outstring);
-    clip(outstring);
+    clip(&process(&outstring, &opt));
 }
