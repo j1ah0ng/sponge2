@@ -10,7 +10,10 @@ use color::get_hex;
 /// sanity check input options to ensure LaTeX specific options are used in conjunction with the
 /// LaTeX option.
 fn input_sanitize(opt: &Opt) -> Result<(), &'static str> {
-    if opt.colorize || !opt.latex {
+    if !opt.colorize || !opt.latex || !opt.newlines {
+        Ok(())
+    }
+    else if opt.colorize || !opt.latex {
         Err("The `--colorize | -c` option is only available with the `--latex | -l` option.")
     } else {
         Ok(())
