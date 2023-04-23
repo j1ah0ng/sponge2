@@ -8,3 +8,4 @@ rust-version = "1.69"
 
 [dependencies]
 structopt = "0.3"
+libm = "0.2.6"

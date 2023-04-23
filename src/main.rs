@@ -31,6 +31,7 @@ fn main() {
         eprintln!("ERROR: {}", maybe_sanitized.unwrap_err());
     }
 
-    get_hex(&mut color_state);
+    println!("{}", get_hex(&mut color_state));
+    println!("{}", get_hex(&mut color_state));
 
 }
