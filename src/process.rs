@@ -20,6 +20,10 @@ pub fn process(out_str: &String, opt: &Opt, color_state: &mut ColorFSM) -> Strin
             fmt_str += default::TEXT_MACRO;
         }
 
+        if opt.newlines {
+            fmt_str += "\\begin{array}{c}";
+        }
+
 
         let parts = out_str.split(" ");
 
@@ -30,18 +34,22 @@ pub fn process(out_str: &String, opt: &Opt, color_state: &mut ColorFSM) -> Strin
                 fmt_str += "\\f{";
                 let intermediate = get_hex(color_state);
                 fmt_str += &intermediate;
-                fmt_str+= "}";
+                fmt_str += "}";
                 fmt_str += "{";
                 fmt_str += part;
-                fmt_str+= " }";
+                fmt_str += " }";
 
             } else {
                 fmt_str += "\\f{";
                 fmt_str += part;
-                fmt_str+= " }";
+                fmt_str += " }";
             }
-
+            if  opt.newlines {
+                fmt_str += "\\\\";
+            }
         }
+
+        fmt_str += "\\end{array}";
 
 
         fmt_str = fmt_str+default::EXIT_BLOCK_MACRO;
