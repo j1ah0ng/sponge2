@@ -80,7 +80,7 @@ fn main() {
         let mut instring = String::new();
         while let Ok(n) = stdin.read_to_string(&mut instring) {
             if n == 0 {
-                return
+                break
             } else {
                 outstring.push_str(&do_sponge(&instring, &mut state));
             }
