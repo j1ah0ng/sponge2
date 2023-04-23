@@ -3,7 +3,7 @@ mod clip;
 mod color;
 mod default;
 
-use std::{fmt, io::stdin, io::Read, result::Result};
+use std::{process::exit, fmt, io::stdin, io::Read, result::Result};
 use structopt::StructOpt;
 use types::{Opt, CaseStateMachine};
 use color::get_hex;
@@ -71,9 +71,9 @@ fn main() {
     println!("{}", get_hex(&mut color_state));
 
     // proceed
+    let mut outstring = String::new();
     let mode = get_mode(&opt);
     if mode == types::Mode::Stdin {
-
         // Read from stdin until EOF
         let mut state = types::CaseStateMachine::new();
         let mut stdin = stdin();
@@ -82,29 +82,31 @@ fn main() {
             if n == 0 {
                 return
             } else {
-                let outstring: String = do_sponge(&instring, &mut state);
-                print!("{}", outstring);
-
-                clip(outstring);
+                outstring.push_str(&do_sponge(&instring, &mut state));
             }
 
         }
 
     } else {
-
         // Get the input as a string, all at once
         let instring = match mode {
-            types::Mode::FromFile => std::fs::read_to_string(opt.file.unwrap()),
+            types::Mode::FromFile => {
+                let path = opt.file.unwrap();
+                if path.try_exists().unwrap_or(false) {
+                    std::fs::read_to_string(path)
+                } else {
+                    eprintln!("ERROR: file {} does not exist", path.display());
+                    exit(-1);
+                }
+            },
             types::Mode::FromArgv => Ok(opt.content.join(" ")),
             default => panic!("not reachable")
         }.unwrap();
 
         // Sponge it
         let mut state = types::CaseStateMachine::new();
-        let outstring: String = do_sponge(&instring, &mut state);
-
-        println!("{}", outstring);
-
-        clip(outstring);
+        outstring.push_str(&do_sponge(&instring, &mut state));
     }
+    print!("{}", outstring);
+    clip(outstring);
 }
