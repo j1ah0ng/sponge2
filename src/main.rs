@@ -1,5 +1,6 @@
 mod types;
 mod color;
+mod default;
 
 use std::{fmt, result::Result};
 use structopt::StructOpt;
