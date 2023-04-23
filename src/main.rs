@@ -1,8 +1,10 @@
 mod types;
+mod color;
 
 use std::{fmt, result::Result};
 use structopt::StructOpt;
 use types::Opt;
+use color::get_hex;
 
 /// determine what mode to use
 fn get_mode(opt: &Opt) -> types::Mode {
@@ -30,11 +32,16 @@ fn input_sanitize(opt: &Opt) -> Result<(), &'static str> {
 fn main() {
     let opt = Opt::from_args();
 
+    let mut color_state = color::ColorFSM { state: 0 };
+
     // sanity check input options.
     let maybe_sanitized = input_sanitize(&opt);
     if maybe_sanitized.is_err() {
         eprintln!("ERROR: {}", maybe_sanitized.unwrap_err());
     }
+
+    println!("{}", get_hex(&mut color_state));
+    println!("{}", get_hex(&mut color_state));
 
     // proceed
     let mode = get_mode(&opt);
