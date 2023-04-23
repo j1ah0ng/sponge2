@@ -52,8 +52,18 @@ pub fn process(out_str: &String, opt: &Opt, color_state: &mut ColorFSM) -> Strin
         fmt_str += "\\end{array}";
 
 
-        fmt_str = fmt_str+default::EXIT_BLOCK_MACRO;
+        fmt_str += default::EXIT_BLOCK_MACRO;
 
+    } else {
+        if opt.newlines {
+            let parts = out_str.split(" ");
+            for part in parts {
+                fmt_str += part;
+                fmt_str += "\n";
+            }
+        } else {
+            fmt_str += out_str;
+        }
     }
 
     return fmt_str;
