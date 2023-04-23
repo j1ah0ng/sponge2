@@ -28,9 +28,9 @@ pub fn process(out_str: &String, opt: &Opt, color_state: &mut ColorFSM) -> Strin
             if opt.colorize {
 
                 fmt_str += "\\f{";
-                let intermediate = get_hex(&mut color_state);
+                let intermediate = get_hex(color_state);
                 fmt_str += &intermediate;
-                fmt_str+= " }";
+                fmt_str+= "}";
                 fmt_str += "{";
                 fmt_str += part;
                 fmt_str+= " }";

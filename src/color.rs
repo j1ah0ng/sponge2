@@ -67,7 +67,9 @@ pub fn get_hex<'life>(color_state: &mut ColorFSM) -> String {
     }
 
     let mut rgb_hex = format!("{:x}", rgb_color);
-    rgb_hex.truncate(rgb_hex.len() - 2);
+    if (rgb_hex.len() != 6) {
+        rgb_hex.truncate(rgb_hex.len() - 2);
+    }
 
     return rgb_hex;
 }
