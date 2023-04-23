@@ -1,4 +1,5 @@
 mod types;
+mod clip;
 mod color;
 mod default;
 
@@ -6,6 +7,7 @@ use std::{fmt, io::stdin, io::Read, result::Result};
 use structopt::StructOpt;
 use types::{Opt, CaseStateMachine};
 use color::get_hex;
+use clip::clip;
 
 /// determine what mode to use
 fn get_mode(opt: &Opt) -> types::Mode {
@@ -99,6 +101,8 @@ fn main() {
         let mut state = types::CaseStateMachine::new();
         let outstring: String = do_sponge(&instring, &mut state);
 
-        println!("{}", outstring)
+        println!("{}", outstring);
+
+        clip(outstring);
     }
 }
