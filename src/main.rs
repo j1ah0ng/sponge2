@@ -19,5 +19,9 @@ fn main() {
     let opt = Opt::from_args();
 
     // sanity check input options.
-    let maybe_sanitized = 
+    let maybe_sanitized = input_sanitize(&opt);
+    if maybe_sanitized.is_err() {
+        eprintln!("ERROR: {}", maybe_sanitized.unwrap_err());
+    }
+
 }
