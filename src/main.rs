@@ -4,10 +4,9 @@ mod color;
 mod default;
 mod process;
 
-use std::{process::exit, fmt, io::stdin, io::Read, result::Result};
+use std::{process::exit, io::stdin, io::Read, result::Result};
 use structopt::StructOpt;
 use types::{Opt, CaseStateMachine};
-use color::get_hex;
 use clip::clip;
 use process::process;
 
@@ -48,7 +47,7 @@ fn do_sponge(instring: &String, state: &mut CaseStateMachine) -> String {
                 state.add_up();
                 String::from("L")
             },
-            default => {
+            _default => {
                 match state.next_is_uppercase() {
                     true => c.to_uppercase().collect::<String>(),
                     false => c.to_lowercase().collect::<String>(),
@@ -69,8 +68,8 @@ fn main() {
         eprintln!("ERROR: {}", maybe_sanitized.unwrap_err());
     }
 
-    println!("{}", get_hex(&mut color_state));
-    println!("{}", get_hex(&mut color_state));
+    //println!("{}", get_hex(&mut color_state));
+    //println!("{}", get_hex(&mut color_state));
 
     // proceed
     let mut outstring = String::new();
@@ -102,13 +101,15 @@ fn main() {
                 }
             },
             types::Mode::FromArgv => Ok(opt.content.join(" ")),
-            default => panic!("not reachable")
+            _default => panic!("not reachable")
         }.unwrap();
 
         // Sponge it
         let mut state = types::CaseStateMachine::new();
         outstring.push_str(&do_sponge(&instring, &mut state));
     }
-    print!("{}", outstring);
-    clip(&process(&outstring, &opt));
+
+    let result: String = process(&outstring, &opt, &mut color_state);
+    print!("{}\n", result);
+    clip(&result);
 }
