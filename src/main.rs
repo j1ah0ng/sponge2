@@ -2,9 +2,9 @@ mod types;
 mod color;
 mod default;
 
-use std::{fmt, result::Result};
+use std::{fmt, io::stdin, io::Read, result::Result};
 use structopt::StructOpt;
-use types::Opt;
+use types::{Opt, CaseStateMachine};
 use color::get_hex;
 
 /// determine what mode to use
@@ -28,7 +28,31 @@ fn input_sanitize(opt: &Opt) -> Result<(), &'static str> {
     }
 }
 
-/// determine what mode of operation
+/// sponge a string
+fn do_sponge(instring: &String, state: &mut CaseStateMachine) -> String {
+    instring.chars().map(|c| {
+        match c {
+            'C' => {
+                state.add_down();
+                String::from("c")
+            },
+            'I' => {
+                state.add_down();
+                String::from("i")
+            },
+            'l' => {
+                state.add_up();
+                String::from("L")
+            },
+            default => {
+                match state.next_is_uppercase() {
+                    true => c.to_uppercase().collect::<String>(),
+                    false => c.to_lowercase().collect::<String>(),
+                }
+            },
+        }
+    }).collect()
+}
 
 fn main() {
     let opt = Opt::from_args();
@@ -49,7 +73,18 @@ fn main() {
     if mode == types::Mode::Stdin {
 
         // Read from stdin until EOF
-        panic!("t implement")
+        let mut state = types::CaseStateMachine::new();
+        let mut stdin = stdin();
+        let mut instring = String::new();
+        while let Ok(n) = stdin.read_to_string(&mut instring) {
+            if n == 0 {
+                return
+            } else {
+                let outstring: String = do_sponge(&instring, &mut state);
+                print!("{}", outstring);
+            }
+
+        }
 
     } else {
 
@@ -62,28 +97,7 @@ fn main() {
 
         // Sponge it
         let mut state = types::CaseStateMachine::new();
-        let outstring: String = instring.chars().map(|c| {
-            match c {
-                'C' => {
-                    state.add_down();
-                    String::from("c")
-                },
-                'I' => {
-                    state.add_down();
-                    String::from("i")
-                },
-                'l' => {
-                    state.add_up();
-                    String::from("L")
-                },
-                default => {
-                    match state.next_is_uppercase() {
-                        true => c.to_uppercase().collect::<String>(),
-                        false => c.to_lowercase().collect::<String>(),
-                    }
-                },
-            }
-        }).collect();
+        let outstring: String = do_sponge(&instring, &mut state);
 
         println!("{}", outstring)
     }
