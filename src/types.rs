@@ -27,7 +27,14 @@ pub struct Opt {
 
 }
 
+/// Modes of operation.
+#[derive(Eq, PartialEq, Debug)]
+pub enum Mode {
+    Stdin, FromFile, FromArgv
+}
+
 /// State machine. 
+#[derive(Debug)]
 pub struct CaseStateMachine {
     /// Consecutive uppercase
     up: u32,
@@ -37,6 +44,21 @@ pub struct CaseStateMachine {
 }
 
 impl CaseStateMachine {
+    pub fn new() -> Self {
+        CaseStateMachine {
+            up: 0,
+            down: 0,
+        }
+    }
+
+    pub fn up(&self) -> u32 {
+        self.up
+    }
+
+    pub fn down(&self) -> u32 {
+        self.down
+    }
+
     pub fn add_up(&mut self) {
         self.up += 1;
         self.zero();
@@ -53,8 +75,8 @@ impl CaseStateMachine {
         }
     }
 
-    fn next_is_uppercase(&mut self) -> bool {
-        match self.up > self.down {
+    pub fn next_is_uppercase(&mut self) -> bool {
+        match self.up < self.down {
             true => {
                 self.add_up();
                 true
@@ -65,4 +87,5 @@ impl CaseStateMachine {
             },
         }
     }
+
 }
