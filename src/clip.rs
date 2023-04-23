@@ -1,5 +1,3 @@
-extern crate copypasta_ext;
-
 use copypasta_ext::prelude::*;
 use copypasta_ext::x11_bin::ClipboardContext;
 

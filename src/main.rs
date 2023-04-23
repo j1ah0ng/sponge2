@@ -84,6 +84,8 @@ fn main() {
             } else {
                 let outstring: String = do_sponge(&instring, &mut state);
                 print!("{}", outstring);
+
+                clip(outstring);
             }
 
         }
