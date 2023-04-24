@@ -47,7 +47,7 @@ fn do_sponge(instring: &String, state: &mut CaseStateMachine) -> String {
                 state.add_up();
                 String::from("L")
             },
-            _default => {
+            _ => {
                 match state.next_is_uppercase() {
                     true => c.to_uppercase().collect::<String>(),
                     false => c.to_lowercase().collect::<String>(),
@@ -101,7 +101,7 @@ fn main() {
                 }
             },
             types::Mode::FromArgv => Ok(opt.content.join(" ")),
-            _default => panic!("not reachable")
+            _ => panic!("not reachable")
         }.unwrap();
 
         // Sponge it
